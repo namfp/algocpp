@@ -39,12 +39,14 @@ int printSolution(vector<int>& dist, vector<int>& pred)
 
 typedef vector< vector<int> > matrix;
 
-void dijkstra(matrix graph, int src)
+
+void dijkstra(matrix& graph, vector<int>& dist, vector<int>& pred, int src)
 {
+  cout << "dijkstra" << endl;
   int size = graph.size();
-  vector<int> dist(size);     // The output array.  dist[i] will hold the shortest
-                  // distance from src to i
-  vector<int> pred(size);
+  // vector<int> dist(size);     // The output array.  dist[i] will hold the shortest
+  //                 // distance from src to i
+  // vector<int> pred(size);
 
   vector<bool> sptSet(size); // sptSet[i] will true if vertex i is included in shortest
                  // path tree or shortest distance from src to i is finalized
@@ -83,10 +85,54 @@ void dijkstra(matrix graph, int src)
         pred[v] = u;
      } 
   }
-  printSolution(dist, pred);
  
      // print the constructed distance array
 };
+
+
+void find_links(matrix& graph, vector<int>& gateways, int src, int& node1, int& node2){
+  cout << "find_links" << endl;
+  int min_distance = INT_MAX;
+  int target = -1;
+  int pred_target = -1;
+  for(vector<int>::iterator gw_it = gateways.begin(); gw_it != gateways.end(); ++gw_it){
+    cout << *gw_it << endl;
+  }
+
+  for(vector<int>::iterator gw_it = gateways.begin(); gw_it != gateways.end(); ++gw_it){
+    cout << "gw_it" << *gw_it << endl;
+    std::vector<int> dist(graph.size(), INT_MAX);
+    std::vector<int> pred(graph.size(), -1);
+    dijkstra(graph, dist, pred, src);
+    for(int i=0; i<dist.size(); i++){
+      cout << dist[i] << " " << pred[i] << endl;
+    }
+    cout << "after dijkstra" << endl;
+    vector<int> gateways_distance(gateways.size(), INT_MAX);
+    
+
+    if (dist[*gw_it] < min_distance){
+      min_distance = dist[*gw_it];
+      target = *gw_it;
+      pred_target = pred[target];
+      
+    }
+   
+  } // for
+   if (target != -1)
+    {
+      node1 = pred_target;
+      node2 = target;
+      // Destroy links
+      graph[node1][node2] = 0;
+      graph[node2][node1] = 0;
+
+    }
+
+}
+
+
+
  
 // driver program to test above function
 
@@ -108,13 +154,17 @@ int main()
     for (int i = 0; i < L; i++) {
         int N1; // N1 and N2 defines a link between these nodes
         int N2;
-        cin >> N1 >> N2; cin.ignore();
+        cin >> N1 >> N2; 
+        cin.ignore();
+        add_link(m, N1, N2);
     }
     vector<int> gateways(E);
+    cout << "size" << gateways.size();
 
     for (int i = 0; i < E; i++) {
         int EI; // the index of a gateway node
-        cin >> EI; cin.ignore();
+        cin >> EI; 
+        cin.ignore();
         gateways.push_back(EI);
     }
 
@@ -122,12 +172,13 @@ int main()
     while (1) {
         int SI; // The index of the node on which the Skynet agent is positioned this turn
         cin >> SI; cin.ignore();
-        dijkstra(m, SI);
-        
+        int node1 = -1;
+        int node2 = -1;
+        find_links(m, gateways, SI, node1, node2);
 
         // Write an action using cout. DON'T FORGET THE "<< endl"
         // To debug: cerr << "Debug messages..." << endl;
 
-        cout << "0 1" << endl; // Example: 0 1 are the indices of the nodes you wish to sever the link between
+        cout << node1 << " " << node2 << endl; // Example: 0 1 are the indices of the nodes you wish to sever the link between
     }
 }
