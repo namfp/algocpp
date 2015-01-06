@@ -4,6 +4,8 @@
 #include <vector>         // std::vector
 #include <functional>     // std::greater
 
+using namespace std;
+
 class mycomparison
 {
   bool reverse;
@@ -31,5 +33,9 @@ int main ()
   mypq_type fourth;                       // less-than comparison
   mypq_type fifth (mycomparison(true));   // greater-than comparison
 
+  while (!second.empty()){
+    cout << second.top() << endl;;
+    second.pop();
+  }
   return 0;
 }

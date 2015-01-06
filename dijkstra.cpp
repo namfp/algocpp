@@ -42,7 +42,6 @@ typedef vector< vector<int> > matrix;
 
 void dijkstra(matrix& graph, vector<int>& dist, vector<int>& pred, int src)
 {
-  cout << "dijkstra" << endl;
   int size = graph.size();
   // vector<int> dist(size);     // The output array.  dist[i] will hold the shortest
   //                 // distance from src to i
@@ -91,23 +90,14 @@ void dijkstra(matrix& graph, vector<int>& dist, vector<int>& pred, int src)
 
 
 void find_links(matrix& graph, vector<int>& gateways, int src, int& node1, int& node2){
-  cout << "find_links" << endl;
   int min_distance = INT_MAX;
   int target = -1;
   int pred_target = -1;
-  for(vector<int>::iterator gw_it = gateways.begin(); gw_it != gateways.end(); ++gw_it){
-    cout << *gw_it << endl;
-  }
 
   for(vector<int>::iterator gw_it = gateways.begin(); gw_it != gateways.end(); ++gw_it){
-    cout << "gw_it" << *gw_it << endl;
     std::vector<int> dist(graph.size(), INT_MAX);
     std::vector<int> pred(graph.size(), -1);
     dijkstra(graph, dist, pred, src);
-    for(int i=0; i<dist.size(); i++){
-      cout << dist[i] << " " << pred[i] << endl;
-    }
-    cout << "after dijkstra" << endl;
     vector<int> gateways_distance(gateways.size(), INT_MAX);
     
 
@@ -119,6 +109,7 @@ void find_links(matrix& graph, vector<int>& gateways, int src, int& node1, int& 
     }
    
   } // for
+
    if (target != -1)
     {
       node1 = pred_target;
@@ -158,8 +149,8 @@ int main()
         cin.ignore();
         add_link(m, N1, N2);
     }
-    vector<int> gateways(E);
-    cout << "size" << gateways.size();
+    vector<int> gateways;
+    
 
     for (int i = 0; i < E; i++) {
         int EI; // the index of a gateway node
@@ -167,6 +158,7 @@ int main()
         cin.ignore();
         gateways.push_back(EI);
     }
+
 
     // game loop
     while (1) {
