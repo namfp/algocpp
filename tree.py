@@ -62,11 +62,16 @@ class Tree(object):
         return True
 
     def find_node_trace(self, node_val):
-        if node_val == self.val:
-            return self, []
-        else:
-            found_left, trace_left = self.find_node_trace(self.left.val, [self])
-            return
+        trace = []
+        nodes = [self]
+        while not nodes:
+            if self.val == node_val:
+                return self, trace
+            else:
+                nodes.pop()
+                trace.append(self)
+
+
 
 
 
