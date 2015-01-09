@@ -4,7 +4,8 @@ import itertools
 
 
 class Tree(object):
-    def __init__(self, val, distance=0, left=None, right=None):
+    def __init__(self, val, distance=0, left=None, right=None, parent=None):
+        self.parent = parent
         self.distance = distance
         self.left = left
         self.right = right
@@ -19,15 +20,17 @@ class Tree(object):
 
 
     def insert_node(self, left_val, right_val):
-        self.left = Tree(left_val, distance=self.distance + 1)
-        self.right = Tree(right_val, distance=self.distance + 1)
+        self.left = Tree(left_val, distance=self.distance + 1, parent=self)
+        self.right = Tree(right_val, distance=self.distance + 1, parent=self)
 
     def insert_tree(self, left_tree, right_tree):
         self.left = left_tree
         if self.left:
+            self.left.parent = self
             self.left.distance = self.distance + 1
         self.right = right_tree
         if self.right:
+            self.right.parent = self
             self.right.distance = self.distance + 1
 
     def find_node(self, node_val):
@@ -61,17 +64,43 @@ class Tree(object):
                 return False
         return True
 
-    def find_node_trace(self, node_val):
-        trace = []
-        nodes = [self]
-        while not nodes:
-            if self.val == node_val:
-                return self, trace
-            else:
-                nodes.pop()
-                trace.append(self)
+    def find_parent_node(self, node1, node2):
+        if not node1 or not node2:
+            return None
+        elif node1.parent == node2.parent:
+            return node1.parent
+        else:
+            return self.find_parent_node(node1.parent, node2.parent)
+
+    def find_parent(self, node_val_1, node_val_2):
+        node_1 = self.find_node(node_val_1)
+        node_2 = self.find_node(node_val_2)
+        return self.find_parent_node(node_1, node_2)
+
+    def is_identical(self, tree):
+        if not tree:
+            return False
+        if not self.val == tree.val:
+            return False
+        identical_left = False
+        if self.left:
+            identical_left = self.left.is_identical(tree.left)
+        else:
+            identical_left = not tree.left
+        identical_right = False
+        if self.right:
+            identical_right = self.right.is_identical(tree.right)
+        else:
+            identical_right = not tree.right
+        return identical_left and identical_right
 
 
+    def sub_tree(self, tree):
+        node = self.find_node(tree.val)
+        if not node:
+            return False
+        else:
+            return node.is_identical(tree)
 
 
 
@@ -124,23 +153,10 @@ def create_tree(sorted_list):
     return tree
 
 
-def find_commun_ancestor(tree, first, second):
-    first_node = tree.find_node(first)
-    second_node = tree.find_node(second)
-    assert first_node
-    assert second_node
-    if first_node.parent == second_node:
-        return second_node
-    elif second_node.parent == first_node:
-        return first_node
-    else:
-        return find_commun_ancestor(tree, first_node.parent, second_node.parent)
-
-
-
-
-
 if __name__ == '__main__':
     tree = create_tree([1, 4, 5, 7, 9, 12, 15, 32, 41])
-    print find_commun_ancestor(tree, 15, 41)
+    tree2 = create_tree([1, 4, 5, 7, 10])
+    print tree.find_parent(4, 7).val
     tree.show()
+    tree2.show()
+    print tree.sub_tree(tree2)
