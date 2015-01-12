@@ -8,9 +8,12 @@ def fibonancci(n):
         return fibonancci(n - 1) + fibonancci(n - 2)
 
 
-def combinations_recursive(iterable, r):
-    pass
-
+def combinations_recursive(iterable):
+    if not iterable:
+        return [tuple()]
+    first = (iterable[0],)
+    subset = combinations_recursive(iterable[1:])
+    return [first + elem for elem in subset] + [first]
 
 
 def combinations(iterable, r):
@@ -59,4 +62,4 @@ if __name__ == '__main__':
     # for c in combinations('abcdefgh', 3):
     #     print c
 
-    print list_powerset([1, 2, 3])
+    print combinations_recursive([1, 2, 3])
