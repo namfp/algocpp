@@ -102,7 +102,11 @@ class Tree(object):
         else:
             return node.is_identical(tree)
 
-
+def BinaryTree(object):
+    def __init__(self, val=None, left=None, right=None):
+        self.val = None
+        self.left = None
+        self.right = None
 
 
 def test_tree():

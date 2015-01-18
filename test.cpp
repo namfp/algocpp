@@ -5,37 +5,15 @@
 #include <functional>     // std::greater
 
 using namespace std;
+#include <iostream>
 
-class mycomparison
-{
-  bool reverse;
-public:
-  mycomparison(const bool& revparam=false)
-    {reverse=revparam;}
-  bool operator() (const int& lhs, const int&rhs) const
-  {
-    if (reverse) return (lhs>rhs);
-    else return (lhs<rhs);
-  }
-};
+int main() 
+{ 
+int m=0,v=0;
 
-int main ()
-{
-  int myints[]= {10,60,50,20};
-
-  std::priority_queue<int> first;
-  std::priority_queue<int> second (myints,myints+4);
-  std::priority_queue<int, std::vector<int>, std::greater<int> >
-                            third (myints,myints+4);
-  // using mycomparison:
-  typedef std::priority_queue<int,std::vector<int>,mycomparison> mypq_type;
-
-  mypq_type fourth;                       // less-than comparison
-  mypq_type fifth (mycomparison(true));   // greater-than comparison
-
-  while (!second.empty()){
-    cout << second.top() << endl;;
-    second.pop();
-  }
-  return 0;
+for(m=5;m>0;){
+    v=v+(m++)+(++m);
+    m=m-3;
+}
+cout << v << endl;
 }
