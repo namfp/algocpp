@@ -102,7 +102,11 @@ class Tree(object):
         else:
             return node.is_identical(tree)
 
-
+def BinaryTree(object):
+    def __init__(self, val=None, left=None, right=None):
+        self.val = None
+        self.left = None
+        self.right = None
 
 
 def test_tree():
@@ -152,11 +156,11 @@ def create_tree(sorted_list):
     tree.insert_tree(left, right)
     return tree
 
+def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return factorial(n - 1) * n
 
 if __name__ == '__main__':
-    tree = create_tree([1, 4, 5, 7, 9, 12, 15, 32, 41])
-    tree2 = create_tree([1, 4, 5, 7, 10])
-    print tree.find_parent(4, 7).val
-    tree.show()
-    tree2.show()
-    print tree.sub_tree(tree2)
+    print factorial(10)
