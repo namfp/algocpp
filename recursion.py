@@ -101,6 +101,19 @@ def test_colorized():
     for l in m:
         print l
 
+
+def eight_queens():
+    result = []
+    i = j = 0
+    for i in range(8):
+        pass
+
+
+
+
+
+
+
 if __name__ == '__main__':
     # for c in combinations('abcdefgh', 3):
     # print c
