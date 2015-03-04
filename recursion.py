@@ -103,6 +103,18 @@ def test_colorized():
     for l in m:
         print l
 
+        
+def eight_queens():
+    result = []
+    i = j = 0
+    for i in range(8):
+        pass
+
+
+
+
+
+
 
 def reverse_list(l):
     if len(l) == 1:
