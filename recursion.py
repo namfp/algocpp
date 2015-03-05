@@ -160,6 +160,9 @@ def move_tower_iterative(height, from_pole, to_pole, with_pole):
     stack_move_first = []
     stack_move_after = []
     height_first = height
+
+
+
     while height_first >= 1:
         stack_move_after.append((height_first - 1, from_pole, with_pole, to_pole))
 
