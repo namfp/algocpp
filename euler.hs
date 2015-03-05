@@ -108,6 +108,8 @@ combinations 0 _ = [[]]
 combinations _ [] = []
 combinations n (x:xs) = (map (x:) (combinations (n - 1) xs)) ++ (combinations n xs)
 
+-- findRest l1 l2
+-- find all elements in l2 that does not appear in l1
 findRest [] l2 = l2
 findRest _ [] = []
 findRest (x:xs) l2 =    let
@@ -115,12 +117,17 @@ findRest (x:xs) l2 =    let
                         in 
                             filter (\ e -> e /= x) rest
 
+-- find all the elements in l2 that does not appear in the list of list of elements in l1
+
 findRestAll l1 l2 = foldr f l2 l1
                     where
                         f el1 l = findRest el1 l
 
 
---group (x:xs) groupElems = let
---                            rest = group xs groupElems
---                            restElems g l= foldr f [] l
---                                where 
+group [] elems = [[]]
+group (x:xs) elems =    let
+                            rest = group xs elems
+                            combinationsX elemRest= (combinations x $ findRestAll elemRest elems)
+                            f x elemRest = map (:elemRest) (combinationsX elemRest)
+                        in
+                            concatMap (f x) rest
