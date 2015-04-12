@@ -49,13 +49,12 @@
 
 (define (find-max-nsums v-primes v-sums)
   (define max-prime (vector-ref v-primes (sub1 (vector-length v-primes))))
-  (define computed-list (map (lambda (i) (cdr (find-max-nsums-i i 0 v-primes v-sums 0 0 max-prime 0)))
+  (define computed-list (map (lambda (i) (cons i (find-max-nsums-i i 0 v-primes v-sums i 0 max-prime 0)))
                     (range 0 (vector-length v-primes))))
   computed-list
   )
- 
-    
-                    
+
+
 
 ;
 ;(define (find-max-nsums i v-primes v-sums)
