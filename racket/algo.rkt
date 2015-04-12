@@ -29,3 +29,42 @@
         [(< elem (vector-ref vector_nums mid)) (binary_search_slice elem vector_nums left mid)]
         [else (binary_search_slice elem vector_nums mid right)])))
   (binary_search_slice elem vector_nums 0 (sub1 (vector-length vector_nums))))
+
+(define (sumij i j v-primes v-sums)
+  (if (= i 0)
+      (vector-ref v-sums j)
+      (- (vector-ref v-sums j) (vector-ref v-primes (sub1 i)))))
+
+(define (find-max-nsums-i i j v-primes v-sums jmax sum-max max-prime max-n)
+  (if (= j (vector-length v-sums)) 
+      (list jmax max-n)
+      (let ([current-sum (sumij i j v-primes v-sums)]
+            [current-n (add1 (- j i))]
+            )
+        (if (> current-sum max-prime)
+            (list jmax max-n)
+            (if (and (> current-n max-n) (vector-member current-sum v-primes))
+                (find-max-nsums-i i (add1 j) v-primes v-sums j current-sum max-prime current-n)
+                (find-max-nsums-i i (add1 j) v-primes v-sums jmax sum-max max-prime max-n))))))
+
+(define (find-max-nsums v-primes v-sums)
+  (define max-prime (vector-ref v-primes (sub1 (vector-length v-primes))))
+  (define computed-list (map (lambda (i) (cdr (find-max-nsums-i i 0 v-primes v-sums 0 0 max-prime 0)))
+                    (range 0 (vector-length v-primes))))
+  computed-list
+  )
+ 
+    
+                    
+
+;
+;(define (find-max-nsums i v-primes v-sums)
+;  (define last-index (sub1 (length v-primes)))
+;  (define f i j jmax v-primes v-sums
+;  
+
+
+;(define (largest-consecutive i-min v-primes v-sum)
+
+(define v-primes (list->vector (reverse (generate 100))))
+(define v-sums (list->vector (reverse (generate_sum (generate 100)))))
