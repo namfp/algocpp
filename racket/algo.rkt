@@ -45,9 +45,7 @@
     (unless (= i 0)  
       (vector-set! r i (+ (vector-ref r i) (vector-ref r (sub1 i))))))
   r
-  )    
-
-
+  )
 
 (define (generate-sum list_num)
   (cond [(empty? list_num) null]
@@ -87,7 +85,7 @@
 
 (define (find-max-nsums v-primes v-sums)
   (define max-prime (vector-ref v-primes (sub1 (vector-length v-primes))))
-  (define computed-list (map (lambda (i) (cons i (find-max-nsums-i i 0 v-primes v-sums i 0 max-prime 0)))
+  (define computed-list (map (lambda (i) (cons i (find-max-nsums-i i i v-primes v-sums i 0 max-prime 0)))
                              (range 0 (vector-length v-primes))))
   (define (get-result computed)
     (argmax fourth computed-list))
@@ -96,19 +94,8 @@
 
 (define solve
   (let* 
-      ([define max-prime 1000000]
-       [define v-primes (v-siege max-prime)]
-       [define v-suns (v-generate-sum v-primes)])
+      ([max-prime 1000000]
+       [v-primes (v-sieve max-prime)]
+       [v-sums (v-generate-sum v-primes)])
     (find-max-nsums v-primes v-sums)
     ))
-  
-  ;
-  ;(define (find-max-nsums i v-primes v-sums)
-  ;  (define last-index (sub1 (length v-primes)))
-  ;  (define f i j jmax v-primes v-sums
-  ;  
-  
-  
-  ;(define (largest-consecutive i-min v-primes v-sum)
-  ;(trace find-max-nsums-i)
-  
