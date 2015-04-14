@@ -4,6 +4,6 @@
   (define memo (make-hash))
   (define (compute i)
     (for/sum (map (lambda (j) (compute (- n j)))
-         (filter (lambda (j) (>= (- n j) 0)) l)))
-         
-               
+                  (filter (lambda (j) (positive? (- n j))) l)))
+    
+    
