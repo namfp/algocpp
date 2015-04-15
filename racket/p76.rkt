@@ -1,11 +1,21 @@
 #lang racket
 
-(define (p76 n)
-  (define v (vector-append #(0 1 2) (build-vector (- n 2) (lambda (x) 0))))
-  (define (compute i)
-    (begin
-      (define r (for/sum  ([j (range 1 (sub1 i))])
-                  (vector-ref v j)))
-      (vector-set! v i r)
-      r))
-  (compute n))
+
+(require racket/trace)
+(define (solve sum)
+  (define l (reverse (rest (range sum))))
+  (define (generate-sum sum coin-value)
+    (if (< (- sum coin-value) 0) 
+        (list sum)
+        (cons sum (generate-sum (- sum coin-value) coin-value))))
+  (define (compute n coins)
+    (define filtered-coins (filter (lambda (x) (<= x n)) coins))
+    (cond 
+      [(= n 0) 1]
+      [(null? filtered-coins) 0]
+          [else (apply + (map (lambda (s) (compute s (rest filtered-coins)))
+                              (generate-sum n (first filtered-coins))))]))
+  
+  (compute sum l))
+
+
