@@ -63,12 +63,13 @@
   (if (empty? l)
       results
       (let* ([m (partial-shortest l)]
+             [nr (cons m results)]
              [s (car m)]
              [removed-nodes (filter (lambda (x) (not (equal? (car x) s))) l)]
              [nexts (next-node s edges)]
              [nd (new-distance m nexts)]
              [nl (add-new-distance removed-nodes nd)]
-             [nr (cons m results)])
+             )
         (new-step nl nr edges)
         )))
 (trace new-step)
