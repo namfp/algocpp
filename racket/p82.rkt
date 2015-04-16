@@ -16,6 +16,14 @@
     [e . ((f . 9))]
     ))
 
+(define edges1
+  '([a . ((b . 1) (c . 2))]
+    [b . ((f . 3) (d . 2))]
+    [c . ((d . 3) (e . 4))]
+    [d . ((f . 3) (g . 3) (e . 2))]
+    [e . ((f . 5))]
+    [f . ((g . 4))]
+    ))
 
 (define (partial-shortest l)
   (define elems (apply append (map decompose l)))
@@ -64,9 +72,6 @@
         (new-step nl nr edges)
         )))
 (trace new-step)
-(trace new-distance)
-(trace add-new-distance)
-(trace next-node)
 ;
 ;
 ;(check-equal? (partial-shortest '((b . (2 . a)) (d . (3 . b)))) '(b . (2 . a)))
