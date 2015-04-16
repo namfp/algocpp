@@ -13,7 +13,8 @@
     [b . ((c . 10) (d . 15))]
     [c . ((d . 11) (f . 2))]
     [d . ((e . 6))]
-    [e . ((f . 9))]))
+    [e . ((f . 9))]
+    ))
 
 
 (define (partial-shortest l)
@@ -24,7 +25,11 @@
   (map (lambda (x) (cons (car elem) x)) (cdr elem)))
 
 (define (next-node symbol edges)
-  (cdr (findf (lambda (x) (equal? (car x) symbol)) edges)))
+  (let ([found (findf (lambda (x) (equal? (car x) symbol)) edges)])
+    (if found
+        (cdr found)
+        null
+        )))
 
 (define (new-distance chosen-node nexts)
   (map (lambda (x) (cons (car x) 
@@ -36,7 +41,7 @@
   (match distance [(cons node (cons d node-from))
                    (let-values ([(found rest) (partition (lambda (x) (equal? (car x) node)) l)])
                      (if (empty? found)
-                         (cons (cons node (cons d node-from)) rest)
+                         (cons (cons node (list (cons d node-from))) rest)
                          (cons (cons (caar found) (cons (cons d  node-from)  (cdar found))) 
                                rest)))]))
 
@@ -59,7 +64,9 @@
         (new-step nl nr edges)
         )))
 (trace new-step)
+(trace new-distance)
 (trace add-new-distance)
+(trace next-node)
 ;
 ;
 ;(check-equal? (partial-shortest '((b . (2 . a)) (d . (3 . b)))) '(b . (2 . a)))
