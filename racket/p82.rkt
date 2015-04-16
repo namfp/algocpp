@@ -73,6 +73,9 @@
         (new-step nl nr edges)
         )))
 (trace new-step)
+(trace new-distance)
+(trace partial-shortest)
+(new-step '((b . ((1 . a))) (c . ((2 . a)))) '(a . (0 . a)) edges1)
 ;
 ;
 ;(check-equal? (partial-shortest '((b . (2 . a)) (d . (3 . b)))) '(b . (2 . a)))
