@@ -1,30 +1,65 @@
 #lang racket
+(require racket/trace)
 (require rackunit)
-(define (add x y)
-  (+ x y))
+(provide add-new-distance)
+(provide partial-shortest)
+(provide new-distance)
+(provide decompose)
+(provide next-node)
+(provide add-one-distance)
+
 (define edges
-  '([a . ((b 7)(c 9)(f 14))]
-    [b . ((c 10)(d 15))]
-    [c . ((d 11)(f 2))]
-    [d . ((e 6))]
-    [e . ((f 9))]))
+  '([a . ((b . 7) (c . 9) (f . 14))]
+    [b . ((c . 10) (d . 15))]
+    [c . ((d . 11) (f . 2))]
+    [d . ((e . 6))]
+    [e . ((f . 9))]))
+
 
 (define (partial-shortest l)
-  (argmin (lambda (x) (cadr x)) l))
+  (define elems (apply append (map decompose l)))
+  (argmin (lambda (x) (car (cdr x))) elems))
+
+(define (decompose elem)
+  (map (lambda (x) (cons (car elem) x)) (cdr elem)))
 
 (define (next-node symbol edges)
   (cdr (findf (lambda (x) (equal? (car x) symbol)) edges)))
 
+(define (new-distance chosen-node nexts)
+  (map (lambda (x) (cons (car x) 
+                         (cons (+ (cadr chosen-node) (cdr x)) 
+                               (car chosen-node))))
+       nexts))
 
-(define (new-step l)
-  (define m (partial-shortest l))
-  1)
-  
+(define (add-one-distance l distance)
+  (match distance [(cons node (cons d node-from))
+                   (let-values ([(found rest) (partition (lambda (x) (equal? (car x) node)) l)])
+                     (if (empty? found)
+                         (cons (cons node (cons d node-from)) rest)
+                         (cons (cons (caar found) (cons (cons d  node-from)  (cdar found))) 
+                               rest)))]))
 
-(define test (make-hash (list (cons 1 2))))
+(define (add-new-distance l new-distances)
+  (if (empty? new-distances)
+      l
+      (add-new-distance (add-one-distance l (first new-distances)) (rest new-distances))))
 
-(check-eq? (add 1 2) 3)
 
-(check-equal? (partial-shortest '((b . ((1 . a))) (c . ((2 . a))) (d . ((+inf.0 . a))))) '(b . (1 . a))) 
-(check-equal? (partial-shortest '((b . (2 . a)) (d . (3 . b)))) '(b . (2 . a)))
-(check-equal? (next-node 'b edges) '((c 10)(d 15)))
+(define (new-step l results edges)
+  (if (empty? l)
+      results
+      (let* ([m (partial-shortest l)]
+             [s (car m)]
+             [removed-nodes (filter (lambda (x) (not (equal? (car x) s))) l)]
+             [nexts (next-node s edges)]
+             [nd (new-distance m nexts)]
+             [nl (add-new-distance removed-nodes nd)]
+             [nr (cons m results)])
+        (new-step nl nr edges)
+        )))
+(trace new-step)
+(trace add-new-distance)
+;
+;
+;(check-equal? (partial-shortest '((b . (2 . a)) (d . (3 . b)))) '(b . (2 . a)))
