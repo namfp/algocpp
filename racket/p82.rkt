@@ -153,6 +153,8 @@
 
 (trace new-step)
 (trace partial-shortest)
+(trace new-distance)
+(trace partial-shortest)
 ;
 ;
 ;(check-equal? (partial-shortest '((b . (2 . a)) (d . (3 . b)))) '(b . (2 . a)))
