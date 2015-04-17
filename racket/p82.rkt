@@ -136,15 +136,37 @@
   )
 
 (define (solve v lmax cmax)
+  
   (define (get-index i j)
     (+ (* i cmax) j))
+  
+  (define (make-range from-i to-i)
+    (range (min from-i from-j) (add1 (max from-i from-j)))
+     )
+    
+  (define (compute loop-i i j)
+    (+ (cdr (vector-ref (get-index loop-i (sub1 j))))
+       (foldr + 0 (map car 
+                       (map (lambda (e) (vector-ref v e j)) 
+                                (make-range loop-i i))))))
+  (define (compute-min i j)
+    (argmin (lambda (loop-i) (compute loop-i i j)) (range lmax)))
+  
+  (define (update-column j)
+    (for-each (lambda (e)
+                (vector-set! v (get-index e j)
+                             (compute-min e j)))
+              (range 0 lmax)))
+       
   (define (solve-j j)
     (solve-j (sub1 j))
-    (for ([i (range 0 imax)])
-      (define elem (vector-get v (get-index i j)))
+    (for ([i (range 0 lmax)])
+      (define elem (vector-ref v (get-index i j)))
       (define mval (argmin (map (lambda (loop-i) (compute loop-i i j) 
-                                (range 0 lmax)))
-      (vector-set! v (get-index i j) (cons  (car elem) mval))
+                                (range 0 lmax)))))
+      (vector-set! v (get-index i j) (cons  (car elem) mval))))
+  1
+  )
       
     
 
