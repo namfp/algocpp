@@ -3,6 +3,9 @@
 (require racket/pretty)
 
 (struct edge (from to distance))
+(define (display-edge e)
+  (printf "from: ~a to: ~a distance: ~a" (edge-from e) (edge-to e) (edge-distance e)))
+
 (define edges1
   '([a . ((b . 1) (c . 2))]
     [b . ((f . 3) (d . 2))]
@@ -11,6 +14,13 @@
     [e . ((f . 5))]
     [f . ((g . 4))]
     ))
+
+(define m (list->vector (map list->vector
+           '((131 673 234 103 18)
+            (201 96 342 965 150)
+            (630 803 746 422 111)
+            (537 699 497 121 956)
+            (805 732 524 37 331)))))
 
 (define heap-distances (make-heap (lambda args (apply <= (map edge-distance args)))))
 
@@ -60,8 +70,44 @@
     r
     ))
 
+(define (matrix->raw matrix len)
+  (define r (make-hash))
+  (define (add-node-one-way node-from node-to distance)
+    (hash-set! r node-from (cons (edge node-from node-to distance)
+                                 (hash-ref! r node-from null))))
+  (define (add-node-two-ways node-from node-to distance)
+    (begin (add-node-one-way node-from node-to distance)
+           (add-node-one-way node-to node-from distance)))
+  
+  (for* ([i (range len)]
+         [j (range len)])
+    (let ([index (+ (* i len) j)]
+          [get-val (lambda (i j) (vector-ref (vector-ref matrix i) j))])
+      (begin
+        (when (< j (sub1 len))
+          (add-node-two-ways index (add1 index) (+ (get-val i j) (get-val i (add1 j)))))
+        (when (< i (sub1 len))
+          (add-node-two-ways index (+ index len) (+ (get-val i j) (get-val (add1 i) j)))))))
+  r
+  
+  )
+
+(define (solve filename)
+  (define v (list->vector (map (lambda (l) 
+                                 (list->vector (map string->number (string-split l ",")))) 
+                               (file->lines "p083_matrix.txt"))))
+  (define raw (dijkstra 0 (matrix->raw v 80)))
+  (define final-node (findf (lambda (e) (= (edge-to e) (sub1 (* 80 80)))) (dijkstra 0 (matrix->raw m 5))))
+  (define result (/ (+ (edge-distance final-node) 4445 7981) 2))
+  result)
+
+
+
+
+
 (define (dijkstra node-from graph)
-  (define origin-node (edge 'a 'a 0))
-  (new-step (new-distance origin-node (next-nodes 'a graph (list origin-node)))
+  (define s node-from)
+  (define origin-node (edge s s 0))
+  (new-step (new-distance origin-node (next-nodes s graph (list origin-node)))
             (list origin-node)
             graph))
