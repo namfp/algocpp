@@ -172,7 +172,6 @@
 
 
 
-
 (trace new-step)
 (trace partial-shortest)
 (trace new-distance)
