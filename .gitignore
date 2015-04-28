@@ -1,6 +1,6 @@
 # Compiled Object files
 .idea
-
+*.class
 *.slo
 *.lo
 *.o
